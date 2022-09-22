@@ -1,0 +1,29 @@
+    ----------------------------------
+    PICNIC OS
+    =========
+
+    a LinuxFromScratch Project
+    [ source : https://linuxfromscratch.org ]
+
+    @deathpicnic
+    ----------------------------------
+
+[+] Building
+------------
+
+	> Takes around 2-3 hrs
+
+	[*] pre-reqs:
+		- DIY
+          - [ build-essential/base-devel gcc make ] etc
+
+	[*] building:
+		- simply run ./build.sh [ ./build.sh ]
+		  - builds basic chroot_environment inside /build directory
+
+[+] chroot_environment
+----------------------
+
+    > To get bash inside chroot_env
+
+      - [ sudo ./chroot_bash.sh <BUILD_DIR> ]
