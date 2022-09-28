@@ -8,6 +8,7 @@
 '
 
 echo "Running ``init2.sh`` inside chroot environment"
+
 touch /var/log/{btmp,lastlog,faillog,wtmp}
 
 chgrp -v utmp /var/log/lastlog
@@ -22,5 +23,3 @@ done
 rm -rf /usr/share/{info,man,doc}/*
 find /usr/{lib,libexec} -name \*.la -delete
 rm -rf /tools
-
-# TO-DO : insidechroot3.sh / init3.sh (pass-2)[more binaries]

@@ -8,6 +8,19 @@
     @deathpicnic
     ----------------------------------
 
+[@] Structure
+-------------
+
+  wget-list : URLs of all src-packages
+  md5sums : md5-checksums of src-packages
+  build.sh : main script to build system
+  {insidechroot_{pass2,pass3,},}pkginstall.sh : installs binaries in phases
+  insidechroot{,1,2,3,4}.sh : run as init{,1,2,3,4}.sh inside chroot_env
+  {un,}prepare_chroot.sh : {un,}mounts directories for chroot_env
+  chroot_bash.sh : gets shell inside chroot_env
+  run.sh : runs build system, inside qemu(x86_64)
+
+
 [+] Building
 ------------
 
@@ -19,7 +32,7 @@
 
 	[*] building:
 		- simply run ./build.sh [ ./build.sh ]
-		  - builds basic chroot_environment inside /build directory
+		  - builds basic chroot_environment inside ``$PWD/build/`` directory
 
 [+] chroot_environment
 ----------------------

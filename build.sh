@@ -4,18 +4,12 @@
     ----------------------------------
     PICNIC OS
     =========
-
     a LinuxFromScratch Project
     @deathpicnic
     ----------------------------------
 '
 
-export PDP="$1"
-
-if [ "$PDP" == "" ]; then
-    export PDP=$PWD/build
-fi
-
+export PDP=$PWD/build
 export PDP_TRGT=`uname -m`-pdp-linux-gnu
 
 export PDP_SRC=$PDP/sources
@@ -36,7 +30,6 @@ chmod +x $SCRPT_DIR/pkginstall/*.sh
 
 mkdir -pv $PDP/pkginstall
 cp -rvf $SCRPT_DIR/pkginstall/* $PDP_PKGINSTALL
-cp -vf $SCRPT_DIR/pkginstall.sh $PDP_PKGINSTALL/pkginstall.sh
 mkdir -pv $PDP_EXTRACTED
 mkdir -pv $LOGS_DIR
 
@@ -50,24 +43,23 @@ esac
 
 mkdir -pv $PDP/tools/{bin,}
 
+# # DOWNLOADS SRC-PKGs from URL inside ``wget-list``
 cat wget-list | while read line; do
 
     URL=$line
     FILE="`basename $line`" || "`echo $line | rev | cut -d'/' -f1 | rev`"
-    ###### DOWNLOADING SOURCES [source : linuxfromscratch.org]
     if [[ ! -f build/sources/$FILE ]]; then
         wget $URL --continue --directory-prefix=$PDP/sources
     fi
 
 done
 
+# # COMPARES SRC-PKGs md5sum inside ``md5sums`` file
 pushd $PDP/sources
-    ###### CHECKING MD5SUM [source : linuxfromscratch.org]
     md5sum -c $SCRPT_DIR/md5sums
 popd
 
-############ PKGINSTALL
-# ======================
+############ PKGINSTALL() ##########################################
 
 for package in binutils gcc linux-api-headers glibc;
 do
@@ -83,8 +75,8 @@ do
     source pkginstall.sh "$package"
 done
 
-# PKGINSTALL PASS-2 [binutils, gcc]
-# =================================
+# # PASS-2 [binutils, gcc]
+# # ======================
 
 for pass2_package in `ls $PDP/pkginstall/ | grep '_pass2.*'` ;
 do
@@ -92,20 +84,24 @@ do
     source $PDP/pkginstall/$pass2_package | tee $LOGS_DIR/$PKG_PASS2_LOG
 done
 
-# # =======================================
+# # ======================
 
-echo "[+] DONE HOST-SIDE BUILDING"
-echo "==========================="
+echo "[+] DONE Building basics"
+echo "========================"
 echo "read logs at $LOGS_DIR/"
 echo "-----------------------"
 echo ""
+echo "[+] Getting inside chroot Environmnet"
+
 
 sudo ./prepare_chroot.sh "$PDP" || _die "Error Preparing chroot, Exitting"
 
 cp -fv insidechroot.sh $PDP/init.sh
 cp -fv insidechroot2.sh $PDP/init2.sh
+cp -fv insidechroot3.sh $PDP/init3.sh
+cp -fv insidechroot4.sh $PDP/init4.sh
 
-for INIT in init init2 init3;
+for INIT in init init2 init3 init4;
 do
     sudo chroot "$PDP" /usr/bin/env -i \
         HOME=/root \
@@ -116,18 +112,19 @@ do
         PS1='(pdp chroot) \u:\w\$ ' \
         PATH=/usr/bin:/usr/sbin:/bin:/sbin \
         bash --login -c './$INIT.sh | tee $INIT.log'
+
+    rm -f $PDP/$INIT.sh
 done
 
-sudo ./unprepare_chroot.sh "$PDP" || _die "Error unpreparing chroot, make sure to unmount everything inside BUILD dir, Exitting..."
+sudo ./unprepare_chroot.sh "$PDP" || _die "Error unpreparing chroot, make sure to unmount manually everything inside <BUILD_DIR>, Exitting..."
 
-rm -f $PDP/init{1,2}.sh
+echo "[!] Creating Backup -> $HOME/$PDP_TRGT-chroot-`date | cut -d" " -f3`-`date | cut -d" " -f2`.tar.gz"
 
-echo "[+] DONE BUILDING BASIC CHROOT_ENV"
-echo "=================================="
-echo "[!] Creating Backup -> $HOME/$PDP_TRGT-temp-tools-`date | cut -d" " -f3`-`date | cut -d" " -f2`.tar.gz"
-tar -czf $HOME/$PDP_TRGT-temp-tools-`date | cut -d" " -f3`-`date | cut -d" " -f2`.tar.gz .
+tar -czf $HOME/$PDP_TRGT-chroot-`date | cut -d" " -f3`-`date | cut -d" " -f2`.tar.gz --exclude=$PDP/extracted/ $PDP/
+
 echo "[+] DONE creating backup"
 echo "========================"
 echo ""
-echo "Picnic OS"
-echo "@deathpicnic"
+echo "Picnic OS @deathpicnic"
+echo ""
+

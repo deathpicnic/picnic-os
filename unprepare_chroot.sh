@@ -23,7 +23,7 @@ fi
 echo $PDP
 
 umount -f $PDP/dev/pts
-umount -f $PDP/proc
+umount -f $PDP/proc || umount -lR $PDP/proc
 umount -f $PDP/sys
 umount -f $PDP/run
 umount -f $PDP/dev || umount -lR $PDP/dev

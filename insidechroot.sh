@@ -1,3 +1,4 @@
+
 #/usr/bin/bash
 
 : '
@@ -30,15 +31,13 @@ install -dv -m 1777 /tmp /var/tmp
 
 ln -sv /proc/self/mounts /etc/mtab
 
-echo $hostname
-
 cat > /etc/hosts << EOF
 127.0.0.1   localhost $hostname
 ::1         localhost
 EOF
 
 echo $hostname > /etc/hostname
-ln -sv /usr/bin/bash /bin/sh | echo ""
+ln -svf /usr/bin/bash /bin/sh
 
 cat > /etc/passwd << "EOF"
 root:x:0:0:root:/root:/bin/bash
@@ -82,4 +81,7 @@ echo "tester:x:101:101::/home/tester:usr/bin/bash" >> /etc/passwd
 echo "tester:x:101:" >> /etc/group
 install -o tester -d /home/tester
 
-# INIT2.SH STARTS ANOTHER SHELL, MAKE SOME BINARIES and REMOVES UNUSUALS
+echo "Using Another BASH"
+
+
+

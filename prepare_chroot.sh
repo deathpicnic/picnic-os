@@ -29,8 +29,8 @@ esac
 
 mkdir -pv $PDP/{dev,proc,sys,run}
 
-sudo mknod -m 600 $PDP/dev/console c 5 1
-sudo mknod -m 666 $PDP/dev/null c 1 3
+# sudo mknod -m 600 $PDP/dev/console c 5 1
+# sudo mknod -m 666 $PDP/dev/null c 1 3
 
 mount -v --bind /dev $PDP/dev
 
