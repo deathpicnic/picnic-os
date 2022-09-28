@@ -1,5 +1,19 @@
 #!/bin/bash
 
+: '
+    ./insidechroot_pkginstall.sh <name>
+    -----------------------------------
+      (pass-1)
+      - checks for src pkg in <BUILD_DIR>/sources/<name>-<PKG_VERSION>.tar.*
+      - extracts in <BUILD_DIR>/extracted/<name>-<PKG_VERSION>/
+      - executes <BUILD_DIR>/pkginstall/insidechroot_<name>.sh
+      - logs at <BUILD_DIR>/logs/<name>.log
+    package-src should be in format <name>-<version>.tar.{gz/xz/bz/*}
+    package-install-script should be in format <name>.sh
+      - $PWD for script : <BUILD_DIR>/extracted/<name>-<PKG_VERSION>/
+      - variable ``$PKG_VERSION`` is available to be used inside script, reflects pkg version if follows format
+'
+
 PDP=""
 PDP_EXTRACTED="$PDP/extracted"
 PDP_SRC="$PDP/sources/"
