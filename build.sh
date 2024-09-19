@@ -5,7 +5,7 @@
     PICNIC OS
     =========
     a LinuxFromScratch Project
-    @deathpicnic
+    @t0be0
     ----------------------------------
 '
 
